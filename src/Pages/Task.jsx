@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Statuscard from "../../Combonents/Statuscard";
+import Statuscard from "../Combonents/Statuscard";
 
 export default function TaskManagerPage() {
   const [newTask, setNewTask] = useState("");
@@ -9,11 +9,15 @@ export default function TaskManagerPage() {
   const handleAddTask = () => {
     if (newTask.trim() === "") return;
 
+    const today = new Date().toISOString().split("T")[0];
+
     setTasks([
       ...tasks,
       {
         id: Date.now(),
         title: newTask,
+        date: today,          // auto date
+        level: "medium",      // default level
         completed: false,
       },
     ]);
@@ -49,15 +53,18 @@ export default function TaskManagerPage() {
   return (
     <div className="task-page">
       <h1 className="task-title">Task Manager</h1>
-      <p className="task-subtitle">Organize and track your learning goals</p>
+      <p className="task-subtitle">
+        Organize and track your learning goals
+      </p>
 
+      {/* STATUS CARDS */}
       <div className="stats-grid">
         <Statuscard icon="🧾" name="Total Tasks" numb={stats.total} />
         <Statuscard icon="✅" name="Completed" numb={stats.completed} />
         <Statuscard icon="⌛" name="Pending" numb={stats.pending} />
       </div>
 
-      {/* INPUT */}
+      {/* ADD TASK */}
       <div className="add-task-form">
         <input
           type="text"
@@ -91,15 +98,27 @@ export default function TaskManagerPage() {
       <ul className="task-list">
         {filteredTasks.map(task => (
           <li key={task.id} className="task-card">
+
             <div className="task-left">
               <input
                 type="checkbox"
                 checked={task.completed}
                 onChange={() => toggleCompleted(task.id)}
               />
-              <span className={task.completed ? "done" : ""}>
-                {task.title}
-              </span>
+
+              <div className="task-content">
+                <h3 className={task.completed ? "done task-title-text" : "task-title-text"}>
+                  {task.title}
+                </h3>
+
+                <div className="task-meta">
+                  <span>📅 {task.date}</span>
+
+                  <span className={`priority ${task.level}`}>
+                    {task.level}
+                  </span>
+                </div>
+              </div>
             </div>
 
             <span

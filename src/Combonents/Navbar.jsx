@@ -1,24 +1,33 @@
-import React from 'react'
-
-function Navbar({username}) {
+function Navbar({ user, setpage, setuser }) {
   return (
-    <div className='main'>
-      <div className='navcontent'>
-        <img src="logo.png" alt="" />
-      <div className='dashboard'>
-    <li>Dashboard</li>
-    <li>Courses</li>
-    <li>Tasks</li>
-    <div className='button'>
-        <h3>{username}
-        <p>{username}@gmail.com</p>
-      </h3>
-      <button>logout</button>
-      </div>
-</div>
+    <div className="main">
+      <div className="navcontent">
+        <img src="logo.png" alt="SkillBridge" />
+
+        <ul className="dashboard">
+          <button className="btn" onClick={() => setpage("dashboard")}>Dashboard</button>
+          <button className="btn" onClick={() => setpage("courses")}>Courses</button>
+          <button className="btn" onClick={() => setpage("tasks")}>Tasks</button>
+        </ul>
+
+        <div className="button">
+          <h3>
+            {user}
+            <p>{user}</p>
+          </h3>
+
+          <button
+            onClick={() => {
+              setuser(null);
+              setpage("login");
+            }}
+          >
+            Logout
+          </button>
+        </div>
       </div>
     </div>
-  )
+  );
 }
 
-export default Navbar
+export default Navbar;
