@@ -3,6 +3,14 @@ import { Link, useNavigate } from "react-router-dom";
 function Navbar({ user, setuser }) {
   const navigate = useNavigate();
 
+  function handleLogout() {
+    setuser(null);
+
+    localStorage.removeItem("user");
+
+    navigate("/login", { replace: true });
+  }
+
   return (
     <div className="main">
       <div className="navcontent">
@@ -20,12 +28,7 @@ function Navbar({ user, setuser }) {
             <p>{user}</p>
           </h3>
 
-          <button
-            onClick={() => {
-              setuser(null);
-              navigate("/Login");
-            }}
-          >
+          <button onClick={handleLogout}>
             Logout
           </button>
         </div>

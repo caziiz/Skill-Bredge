@@ -9,18 +9,20 @@ function Login({ setuser }) {
   const handlesubmit = (e) => {
     e.preventDefault();
 
-    // 1️⃣ validate first
+    // validate
     if (password.length < 6) {
       alert("Password must be at least 6 characters");
       return;
     }
 
-    // 2️⃣ save user
     const userdata = { email, password };
+
+    // save to state
     setuser(userdata);
 
-    // 3️⃣ navigate AFTER state update
-    navigate("/", {replace:true});
+    localStorage.setItem("user", JSON.stringify(userdata));
+
+    navigate("/", { replace: true });
   };
 
   return (
@@ -63,7 +65,9 @@ function Login({ setuser }) {
         <button
           className="demo-btn"
           onClick={() => {
-            setuser({ email: "demo@gmail.com", password: "123456" });
+            const demo = { email: "demo@gmail.com", password: "123456" };
+            setuser(demo);
+            localStorage.setItem("user", JSON.stringify(demo)); 
             navigate("/", { replace: true });
           }}
         >
