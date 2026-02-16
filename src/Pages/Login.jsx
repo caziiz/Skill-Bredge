@@ -1,28 +1,33 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 function Login({ setuser }) {
   const [email, setemail] = useState("");
   const [password, setpassword] = useState("");
+
   const navigate = useNavigate();
+  const location = useLocation();
+
+  // page user originally tried to visit
+const from = location.state?.from || "/";
+  console.log(location.state);
+
 
   const handlesubmit = (e) => {
     e.preventDefault();
 
-    // validate
     if (password.length < 6) {
       alert("Password must be at least 6 characters");
       return;
     }
 
     const userdata = { email, password };
-
-    // save to state
     setuser(userdata);
 
     localStorage.setItem("user", JSON.stringify(userdata));
 
-    navigate("/", { replace: true });
+    // go back to previous page
+    navigate(from, { replace: true });
   };
 
   return (
@@ -67,8 +72,8 @@ function Login({ setuser }) {
           onClick={() => {
             const demo = { email: "demo@gmail.com", password: "123456" };
             setuser(demo);
-            localStorage.setItem("user", JSON.stringify(demo)); 
-            navigate("/", { replace: true });
+            localStorage.setItem("user", JSON.stringify(demo));
+            navigate(from, { replace: true });
           }}
         >
           Try Demo Account
