@@ -1,13 +1,17 @@
-function Navbar({ user, setpage, setuser }) {
+import { Link, useNavigate } from "react-router-dom";
+
+function Navbar({ user, setuser }) {
+  const navigate = useNavigate();
+
   return (
     <div className="main">
       <div className="navcontent">
         <img src="logo.png" alt="SkillBridge" />
 
         <ul className="dashboard">
-          <button className="btn" onClick={() => setpage("dashboard")}>Dashboard</button>
-          <button className="btn" onClick={() => setpage("courses")}>Courses</button>
-          <button className="btn" onClick={() => setpage("tasks")}>Tasks</button>
+          <Link className="btn" to="/">Dashboard</Link>
+          <Link className="btn" to="/courses">Courses</Link>
+          <Link className="btn" to="/tasks">Tasks</Link>
         </ul>
 
         <div className="button">
@@ -19,7 +23,7 @@ function Navbar({ user, setpage, setuser }) {
           <button
             onClick={() => {
               setuser(null);
-              setpage("login");
+              navigate("/Login");
             }}
           >
             Logout

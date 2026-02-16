@@ -686,3 +686,7 @@ body {
 .learn-list{
   list-style: none;
 }
+.dashboard .btn{
+  text-decoration: none;
+  color: black;
+}

@@ -1,25 +1,26 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-function Login({ setpage, setuser }) {
+function Login({ setuser }) {
   const [email, setemail] = useState("");
   const [password, setpassword] = useState("");
+  const navigate = useNavigate();
 
   const handlesubmit = (e) => {
-    e.preventDefault(); // stop page reload
+    e.preventDefault();
 
-    // simple validation
+    // 1️⃣ validate first
     if (password.length < 6) {
       alert("Password must be at least 6 characters");
       return;
     }
 
-    const userdata = {
-      email,
-      password,
-    };
-
+    // 2️⃣ save user
+    const userdata = { email, password };
     setuser(userdata);
-    setpage("dashboard");
+
+    // 3️⃣ navigate AFTER state update
+    navigate("/", {replace:true});
   };
 
   return (
@@ -62,17 +63,12 @@ function Login({ setpage, setuser }) {
         <button
           className="demo-btn"
           onClick={() => {
-            setuser({ email: "DemoAccount @gmail.com", password: "123456" });
-            setpage("dashboard");
+            setuser({ email: "demo@gmail.com", password: "123456" });
+            navigate("/", { replace: true });
           }}
         >
           Try Demo Account
         </button>
-
-        <p className="demo-text">
-          Demo credentials: Use any email and password (min 6 chars) to get
-          started
-        </p>
       </div>
     </div>
   );

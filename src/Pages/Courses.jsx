@@ -1,9 +1,9 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { courses } from "../assets/data/Courses";
 
-
-function Courses({setselectedcourse , setpage}) {
-
+function Courses() {
+  const navigate = useNavigate();
 
   const categories = ["all", "web", "mobile", "ai", "data"];
   const [selectedCategory, setSelectedCategory] = useState("all");
@@ -13,10 +13,9 @@ function Courses({setselectedcourse , setpage}) {
       ? courses
       : courses.filter((course) => course.category === selectedCategory);
 
-      const opencourses =(course)=>{
-        setselectedcourse(course);
-        setpage ("Coursedetail")
-      }
+  const opencourses = (course) => {
+    navigate(`/courses/${course.id}`);
+  };
 
   return (
     <div className="courses-container">
@@ -38,30 +37,28 @@ function Courses({setselectedcourse , setpage}) {
       </div>
 
       <div className="courses-grid">
-        {filteredCourses.length > 0 ? (
-          filteredCourses.map((course) => (
-            <div onClick={()=> opencourses(course)} className="course-card" key={course.id}>
-              <div className="card-img">
-                <img src={course.image} alt={course.title} />
-                <span className="badge">
-                  {course.category}
-                </span>
-              </div>
+        {filteredCourses.map((course) => (
+          <div
+            onClick={() => opencourses(course)}
+            className="course-card"
+            key={course.id}
+          >
+            <div className="card-img">
+              <img src={course.image} alt={course.title} />
+              <span className="badge">{course.category}</span>
+            </div>
 
-              <div className="card-body">
-                <h3>{course.title}</h3>
-                <p>{course.description}</p>
+            <div className="card-body">
+              <h3>{course.title}</h3>
+              <p>{course.description}</p>
 
-                <div className="card-footer">
-                  <span className="rating">⭐ 4.8</span>
-                  <button className="btn-enroll">Enroll</button>
-                </div>
+              <div className="card-footer">
+                <span className="rating">⭐ 4.8</span>
+                <button className="btn-enroll">Enroll</button>
               </div>
             </div>
-          ))
-        ) : (
-          <p className="empty">No courses found 🚫</p>
-        )}
+          </div>
+        ))}
       </div>
     </div>
   );
