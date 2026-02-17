@@ -1,7 +1,11 @@
 import DashboardInfo from "../Combonents/DashboardInfo";
 import Statuscard from "../Combonents/Statuscard";
+import { useContext } from "react";
+import { UserContex } from "../App";
 
-function Dashboard({ user }) {
+function Dashboard() {
+  const { user } = useContext(UserContex);
+
   if (!user) {
     return <h2>Loading...</h2>;
   }
@@ -15,7 +19,8 @@ function Dashboard({ user }) {
 
   return (
     <div>
-<DashboardInfo username={user.email.split("@")[0]} />
+      <DashboardInfo username={user.email.split("@")[0]} />
+
       <div className="Statusgrid">
         {statusData.map((status, index) => (
           <Statuscard

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, createContext, useContext } from "react";
 import { Routes, Route, Navigate, Outlet, useLocation } from "react-router-dom";
 
 import Courses from "./Pages/Courses";
@@ -8,8 +8,11 @@ import Tasks from "./Pages/Task";
 import Login from "./Pages/Login";
 import Coursedetail from "./Pages/Coursedetail";
 
+export const UserContex = createContext();
+
 /* ---------- Protected Route ---------- */
-function ProtectedRoute({ user, children }) {
+function ProtectedRoute({ children }) {
+const { user } = useContext(UserContex);
   const location = useLocation();
 
   if (!user) {
@@ -20,20 +23,21 @@ function ProtectedRoute({ user, children }) {
 }
 
 /* ---------- Login Redirect Handler ---------- */
-function LoginRedirect({ user, setuser }) {
+function LoginRedirect() {
+const { user } = useContext(UserContex);
   const location = useLocation();
   const from = location.state?.from?.pathname || "/";
 
   if (user) return <Navigate to={from} replace />;
 
-  return <Login setuser={setuser} />;
+  return <Login />;
 }
 
 /* ---------- Layout ---------- */
-function Layout({ user, setuser }) {
+function Layout() {
   return (
     <>
-      <Navbar user={user?.email.split("@")[0]} setuser={setuser} />
+      <Navbar />
       <Outlet />
     </>
   );
@@ -42,62 +46,58 @@ function Layout({ user, setuser }) {
 function App() {
   const [user, setuser] = useState(null);
 
-  // keep login after refresh (optional)
   useEffect(() => {
     const savedUser = localStorage.getItem("user");
     if (savedUser) setuser(JSON.parse(savedUser));
   }, []);
 
   return (
-    <Routes>
+    <UserContex.Provider value={{ user, setuser }}>
+      <Routes>
 
-      {/* LOGIN */}
-      <Route path="/login" element={<LoginRedirect user={user} setuser={setuser} />} />
+        <Route path="/login" element={<LoginRedirect />} />
 
-      {/* Layout always loads */}
-      <Route path="/" element={<Layout user={user} setuser={setuser} />}>
+        <Route path="/" element={<Layout />}>
+          <Route
+            index
+            element={
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
+            }
+          />
 
-        <Route
-          index
-          element={
-            <ProtectedRoute user={user}>
-              <Dashboard user={user} />
-            </ProtectedRoute>
-          }
-        />
+          <Route
+            path="courses"
+            element={
+              <ProtectedRoute>
+                <Courses />
+              </ProtectedRoute>
+            }
+          />
 
-        <Route
-          path="courses"
-          element={
-            <ProtectedRoute user={user}>
-              <Courses />
-            </ProtectedRoute>
-          }
-        />
+          <Route
+            path="courses/:id"
+            element={
+              <ProtectedRoute>
+                <Coursedetail />
+              </ProtectedRoute>
+            }
+          />
 
-        <Route
-          path="courses/:id"
-          element={
-            <ProtectedRoute user={user}>
-              <Coursedetail />
-            </ProtectedRoute>
-          }
-        />
+          <Route
+            path="tasks"
+            element={
+              <ProtectedRoute>
+                <Tasks />
+              </ProtectedRoute>
+            }
+          />
+        </Route>
 
-        <Route
-          path="tasks"
-          element={
-            <ProtectedRoute user={user}>
-              <Tasks />
-            </ProtectedRoute>
-          }
-        />
-
-      </Route>
-
-      <Route path="*" element={<Navigate to="/login" replace />} />
-
-    </Routes>
+        <Route path="*" element={<Navigate to="/login" replace />} />
+      </Routes>
+    </UserContex.Provider>
   );
 }
 

@@ -1,17 +1,17 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import { UserContex } from "../App";
 
-function Login({ setuser }) {
+function Login() {
+  const { setuser } = useContext(UserContex);
+
   const [email, setemail] = useState("");
   const [password, setpassword] = useState("");
 
   const navigate = useNavigate();
   const location = useLocation();
 
-  // page user originally tried to visit
-const from = location.state?.from || "/";
-  console.log(location.state);
-
+  const from = location.state?.from?.pathname || "/";
 
   const handlesubmit = (e) => {
     e.preventDefault();
@@ -25,8 +25,6 @@ const from = location.state?.from || "/";
     setuser(userdata);
 
     localStorage.setItem("user", JSON.stringify(userdata));
-
-    // go back to previous page
     navigate(from, { replace: true });
   };
 

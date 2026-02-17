@@ -1,13 +1,16 @@
 import { Link, useNavigate } from "react-router-dom";
+import { useContext } from "react";
+import { UserContex } from "../App";
 
-function Navbar({ user, setuser }) {
+function Navbar() {
+  const { user, setuser } = useContext(UserContex);
   const navigate = useNavigate();
+
+  const username = user?.email?.split("@")[0];
 
   function handleLogout() {
     setuser(null);
-
     localStorage.removeItem("user");
-
     navigate("/login", { replace: true });
   }
 
@@ -24,8 +27,8 @@ function Navbar({ user, setuser }) {
 
         <div className="button">
           <h3>
-            {user}
-            <p>{user}</p>
+            {username}
+            <p>{user?.email}</p>
           </h3>
 
           <button onClick={handleLogout}>
